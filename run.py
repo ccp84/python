@@ -1,5 +1,9 @@
+"""
+Update sales spreadsheet program
+"""
 import gspread
 from google.oauth2.service_account import Credentials
+from pprint import pprint
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -58,6 +62,19 @@ def update_sales_worksheet(sales_data):
     sales_sheet.append_row(sales_data)
     print("Update complete\n")
 
+
+def update_surplus_worksheet(surplus_data):
+    """
+    Update surplus worksheet
+    Get stock data from worksheet and subtract sales data
+    Return result to surplus sheet
+    """
+    print('Calculating surplus data...\n')
+    stock_sheet = SHEET.worksheet('stock').get_all_values()
+    surplus_sheet = SHEET.worksheet('surplus')
+    stock_row = stock_sheet[-1]
+
+
 def main():
     """
     Main program function calls
@@ -65,6 +82,8 @@ def main():
     data = get_sales_data()
     sales = [int(num) for num in data]
     update_sales_worksheet(sales)
+    update_surplus_worksheet(sales)
 
 
+print('Welcome to Love Sandwiches Data Automation\n')
 main()
