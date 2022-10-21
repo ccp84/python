@@ -1,8 +1,8 @@
 """
 Update sales spreadsheet program
 """
-import gspread
 import math
+import gspread
 from google.oauth2.service_account import Credentials
 
 SCOPE = [
@@ -106,6 +106,17 @@ def calculate_stock_data(data):
     return stock_data
 
 
+def display_stock_data(data):
+    """
+    Retrieve headings from stock worksheet and display stock data from
+    calculate stock data function as stock to be made for next day
+    """
+    stock_headings = SHEET.worksheet('stock').row_values(1)
+    stock_needed = data
+    display = dict(zip(stock_headings, stock_needed))
+    print(f"Please make the following sandwiches for tomorrow:\n {display}")
+
+
 def main():
     """
     Main program function calls
@@ -118,6 +129,7 @@ def main():
     sales_entries = get_last_5_sales_entries()
     stock_average = calculate_stock_data(sales_entries)
     update_sheet(stock_average, "stock")
+    display_stock_data(stock_average)
 
 
 print('Welcome to Love Sandwiches Data Automation\n')
