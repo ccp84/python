@@ -2,8 +2,8 @@
 Update sales spreadsheet program
 """
 import gspread
+import math
 from google.oauth2.service_account import Credentials
-from pprint import pprint
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -26,7 +26,7 @@ def get_sales_data():
         print("Please provide sales figures from last market")
         print("Data should be 6 figures, separagted by commas")
         print("Example 10, 20, 30, 40, 50, 60\n")
-        data_str = input("Enter sales figures here: ")
+        data_str = input("Enter sales figures here:\n ")
         sales_data = data_str.split(",")
 
         if validate_data(sales_data):
@@ -92,6 +92,20 @@ def get_last_5_sales_entries():
     return columns
 
 
+def calculate_stock_data(data):
+    """
+    Calculate stock data from sales and surplus numbers
+    """
+    print('Calculating stock data...\n')
+    stock_data = []
+    for column in data:
+        int_column = [int(num) for num in column]
+        average = sum(int_column) / len(int_column)
+        stock_num = math.floor(average * 1.1)
+        stock_data.append(stock_num)
+    return stock_data
+
+
 def main():
     """
     Main program function calls
@@ -102,6 +116,8 @@ def main():
     surplus_data = calculate_surplus_data(sales)
     update_sheet(surplus_data, "surplus")
     sales_entries = get_last_5_sales_entries()
+    stock_average = calculate_stock_data(sales_entries)
+    update_sheet(stock_average, "stock")
 
 
 print('Welcome to Love Sandwiches Data Automation\n')
